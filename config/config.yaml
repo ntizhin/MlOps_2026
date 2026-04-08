@@ -1,0 +1,13 @@
+data:
+  target: claim_paid
+  batch_size: 1000
+
+model:
+  type: random_forest
+  params:
+    n_estimators: 100
+    max_depth: 10
+
+paths:
+  model_path: models/model.pkl
+  metrics_path: metrics/metrics.csv
