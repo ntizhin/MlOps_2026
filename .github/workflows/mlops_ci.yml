@@ -1,0 +1,47 @@
+name: MLOps CI/CD Workflow
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  train-and-log:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+
+      - name: Install dependencies
+        run: uv pip install -e .
+
+      - name: Generate dummy data
+        run: |
+          if [ ! -f data.csv ]; then
+            python -c "import pandas as pd; pd.DataFrame({'f1': [1,2,3,4], 'target': [0,1,0,1]}).to_csv('data.csv', index=False)"
+          fi
+
+      - name: Run model update
+        run: |
+          mkdir -p artifacts
+          uv run run.py -mode update -file data.csv > artifacts/training_logs.txt 2>&1
+
+      - name: Upload training logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ml-training-logs
+          path: artifacts/training_logs.txt
+          retention-days: 7

@@ -176,3 +176,17 @@ metrics/metrics.csv
   * возраст автомобиля
 * логирование метрик по батчам
 
+## 🔄 CI/CD и развёртывание
+
+**Локальный запуск:**
+1. Установите зависимости: `uv pip install -e .`
+2. Запустите обучение: `uv run run.py -mode update -file data.csv`
+3. Выполните инференс: `uv run run.py -mode inference -file new_data.csv`
+4. Выведите метрики: `uv run run.py -mode summary`
+
+**Автоматизация (GitHub Actions):**
+- Конфигурация workflow: `.github/workflows/mlops_ci.yml`
+- Триггеры: автоматический запуск при `push` и создании `pull_request` в ветки `main`/`master`
+- Окружение разворачивается через `astral-sh/setup-uv` и установку зависимостей из `pyproject.toml`
+- Логи обучения сохраняются в артефакты ранна
+- Скачать артефакты: вкладка Actions → выбранный запуск → раздел Artifacts
