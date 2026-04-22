@@ -25,7 +25,7 @@ jobs:
           version: "latest"
 
       - name: Install dependencies
-        run: uv pip install -e .
+        run: uv pip install --system -e .
 
       - name: Generate dummy data
         run: |
@@ -38,10 +38,13 @@ jobs:
           mkdir -p artifacts
           uv run run.py -mode update -file data.csv > artifacts/training_logs.txt 2>&1
 
-      - name: Upload training logs
+      - name: Upload artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ml-training-logs
-          path: artifacts/training_logs.txt
+          name: mlops-run-artifacts
+          path: |
+            artifacts/training_logs.txt
+            metrics/*.csv
+            models/*.pkl
           retention-days: 7
