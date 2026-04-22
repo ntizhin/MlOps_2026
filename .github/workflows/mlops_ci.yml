@@ -37,7 +37,7 @@ jobs:
         id: train
         run: |
           mkdir -p artifacts
-          uv run run.py -mode update -file data.csv > artifacts/training_logs.txt 2>&1
+          uv run run.py -mode update -file data/data.csv > artifacts/training_logs.txt 2>&1
 
       - name: Show logs on failure
         if: failure() && steps.train.conclusion == 'failure'
